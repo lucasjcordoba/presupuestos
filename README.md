@@ -68,3 +68,102 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# Presupuestos
+
+Aplicación web para gestionar un presupuesto personal de forma simple e incremental.  
+Permite definir un presupuesto inicial, cargar gastos y visualizar en tiempo real el saldo restante con indicadores visuales.
+
+Este proyecto nace como una app simple y evoluciona progresivamente hacia una solución más completa, priorizando buenas prácticas de versionado, refactor incremental y mejoras de arquitectura.
+
+---
+
+## ✨ Funcionalidades actuales
+
+- Definición de presupuesto inicial
+- Carga de gastos con nombre y monto
+- Listado de gastos
+- Cálculo automático del saldo restante
+- Indicadores visuales según nivel de gasto
+
+---
+
+## 🛠️ Stack actual
+
+- React (Create React App)
+- JavaScript
+- CSS
+- Node.js
+
+> El proyecto se encuentra en proceso de refactor y modernización progresiva.
+
+---
+
+## 🚀 Cómo correr el proyecto localmente
+
+### Requisitos
+- **Node.js 20.x**  
+  (se recomienda usar `nvm`, ver archivo `.nvmrc`)
+
+### Pasos
+
+```bash
+nvm use
+npm install
+npm start
+```
+
+La aplicación se abrirá en:  
+👉 http://localhost:3000
+
+---
+
+## ⚠️ Nota sobre OpenSSL
+
+Este proyecto utiliza Create React App con tooling legacy.  
+Para compatibilidad con Node moderno, el script de `start` incluye:
+
+```
+NODE_OPTIONS=--openssl-legacy-provider
+```
+
+Esto es intencional y está documentado como solución temporal hasta la migración de tooling.
+
+---
+
+## 📸 Progreso visual
+
+Las capturas de pantalla del avance del proyecto se encuentran en:
+
+```
+/docs/screenshots
+```
+
+Se documenta la evolución de la aplicación desde su versión inicial hasta las mejoras sucesivas.
+
+---
+
+## 🧭 Roadmap (alto nivel)
+
+- [x] Versión inicial funcional
+- [ ] Persistencia local (localStorage)
+- [ ] Refactor de estado y lógica
+- [ ] Migración a Vite + TypeScript
+- [ ] Soporte para adjuntar tickets / facturas
+- [ ] Backend + autenticación
+- [ ] Integraciones externas (IA, WhatsApp)
+
+---
+
+## 📦 Versionado y flujo de trabajo
+
+- Rama principal: `main` (siempre estable)
+- Desarrollo por ramas de feature
+- Squash merge para mantener historial limpio
+- Commits siguiendo **Conventional Commits**
+
+---
+
+## 📄 Licencia
+
+Proyecto personal con fines educativos y de portfolio.
