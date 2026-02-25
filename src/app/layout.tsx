@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Raleway } from 'next/font/google';
+import { SessionProvider } from 'next-auth/react';
 import './globals.css';
 
 const raleway = Raleway({
@@ -24,7 +25,9 @@ export default function RootLayout({
         className="min-h-screen font-[family-name:var(--font-raleway)]"
         style={{ background: 'linear-gradient(to right, #004e92, #000428)' }}
       >
-        {children}
+        <SessionProvider>
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );
