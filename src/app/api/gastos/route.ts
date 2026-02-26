@@ -25,7 +25,7 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from('gastos')
-    .select('id, nombre, cantidad')
+    .select('id, nombre, cantidad, categoria_id, fecha, categoria:categorias(nombre, color)')
     .eq('presupuesto_id', presupuesto.id)
     .order('created_at', { ascending: true });
 
@@ -43,8 +43,10 @@ export async function POST(req: Request) {
   }
 
   const body = await req.json();
-  const nombre = String(body.nombre ?? '').trim();
-  const cantidad = Number(body.cantidad);
+  const nombre      = String(body.nombre ?? '').trim();
+  const cantidad    = Number(body.cantidad);
+  const categoria_id = body.categoria_id ?? null;
+  const fecha        = body.fecha ?? null;
 
   if (!nombre || !cantidad || cantidad < 1) {
     return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 });
@@ -69,8 +71,8 @@ export async function POST(req: Request) {
 
   const { data, error } = await supabase
     .from('gastos')
-    .insert({ presupuesto_id: presupuesto.id, nombre, cantidad })
-    .select('id, nombre, cantidad')
+    .insert({ presupuesto_id: presupuesto.id, nombre, cantidad, categoria_id, fecha })
+    .select('id, nombre, cantidad, categoria_id, fecha, categoria:categorias(nombre, color)')
     .single();
 
   if (error) {
