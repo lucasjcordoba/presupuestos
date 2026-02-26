@@ -3,3 +3,8 @@ export interface Gasto {
   nombre:   string;
   cantidad: number;
 }
+
+export interface Presupuesto {
+  id:       string | null;
+  cantidad: number;
+}
