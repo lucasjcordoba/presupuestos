@@ -13,14 +13,18 @@ import {
   fetchGastos,
   addGasto,
   deleteGasto,
+  fetchCategorias,
+  addCategoria,
+  deleteCategoria,
 } from '@/lib/api';
-import type { Gasto } from '@/types';
+import type { Gasto, Categoria } from '@/types';
 
 export default function Home() {
   const { data: session, status } = useSession();
 
   const [presupuesto, setPresupuesto]         = useState(0);
   const [gastos, setGastos]                   = useState<Gasto[]>([]);
+  const [categorias, setCategorias]           = useState<Categoria[]>([]);
   const [mostrarpregunta, actualizarPregunta] = useState(true);
   const [loading, setLoading]                 = useState(false);
   const [error, setError]                     = useState<string | null>(null);
@@ -29,12 +33,14 @@ export default function Home() {
     setLoading(true);
     setError(null);
     try {
-      const [pres, gastosList] = await Promise.all([
+      const [pres, gastosList, catsList] = await Promise.all([
         fetchPresupuesto(),
         fetchGastos(),
+        fetchCategorias(),
       ]);
       setPresupuesto(pres.cantidad);
       setGastos(gastosList);
+      setCategorias(catsList);
       actualizarPregunta(!(pres.cantidad > 0));
     } catch {
       setError('Error al cargar los datos. Intentá de nuevo.');
@@ -60,7 +66,7 @@ export default function Home() {
 
   const handleAgregarGasto = async (gasto: Gasto) => {
     try {
-      const nuevo = await addGasto(gasto.nombre, gasto.cantidad);
+      const nuevo = await addGasto(gasto.nombre, gasto.cantidad, gasto.categoria_id, gasto.fecha);
       setGastos((prev) => [...prev, nuevo]);
     } catch {
       setError('Error al agregar el gasto.');
@@ -75,6 +81,34 @@ export default function Home() {
       setError('Error al eliminar el gasto.');
     }
   };
+
+  const handleAgregarCategoria = useCallback(async (nombre: string, color: string): Promise<Categoria> => {
+    try {
+      const nueva = await addCategoria(nombre, color);
+      setCategorias((prev) => [...prev, nueva].sort((a, b) => a.nombre.localeCompare(b.nombre)));
+      return nueva;
+    } catch {
+      setError('Error al crear la categoría.');
+      throw new Error('Error al crear la categoría.');
+    }
+  }, []);
+
+  const handleEliminarCategoria = async (id: string) => {
+    try {
+      await deleteCategoria(id);
+      setCategorias((prev) => prev.filter((c) => c.id !== id));
+      setGastos((prev) =>
+        prev.map((g) =>
+          g.categoria_id === id ? { ...g, categoria_id: null, categoria: null } : g
+        )
+      );
+    } catch {
+      setError('Error al eliminar la categoría.');
+    }
+  };
+
+  // handleEliminarCategoria is available for future use
+  void handleEliminarCategoria;
 
   const totalGastado = useMemo(
     () => gastos.reduce((acc, g) => acc + Number(g.cantidad ?? 0), 0),
@@ -144,10 +178,16 @@ export default function Home() {
                   <Formulario
                     guardarGasto={handleAgregarGasto}
                     guardarCrearGasto={() => {}}
+                    categorias={categorias}
+                    onNuevaCategoria={handleAgregarCategoria}
                   />
                 </div>
                 <div>
-                  <Listado gastos={gastos} onEliminar={handleEliminarGasto} />
+                  <Listado
+                    gastos={gastos}
+                    categorias={categorias}
+                    onEliminar={handleEliminarGasto}
+                  />
                   <ControlPresupuesto
                     presupuesto={presupuesto}
                     restante={restante}
